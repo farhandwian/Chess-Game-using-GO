@@ -1,8 +1,8 @@
 package move
 
 import (
-	"chess/conditions"
-	"chess/model"
+	"chess_game/chess"
+	"chess_game/chess/conditions"
 )
 
 type PossibleMovesProvider struct {
@@ -24,21 +24,21 @@ func NewPossibleMovesProvider(maxSteps int, baseCondition conditions.MoveBaseCon
 }
 
 // PossibleMoves returns all possible cells for a given piece and board
-func (p *PossibleMovesProvider) PossibleMoves(piece *model.Piece, board *model.Board, additionalBlockers []conditions.PieceCellOccupyBlocker, player *model.Player) []*model.Cell {
+func (p *PossibleMovesProvider) PossibleMoves(piece *chess.Piece, board *chess.Board, additionalBlockers []conditions.PieceCellOccupyBlocker, player *chess.Player) []*chess.Box {
 	if p.baseCondition.IsBaseConditionFulfilled(piece) {
 		return p.PossibleMovesAsPerCurrentType(piece, board, additionalBlockers, player)
 	}
 	return nil
 }
 
-// PossibleMovesAsPerCurrentType harus diimplementasikan oleh tipe move tertentu
-func (p *PossibleMovesProvider) PossibleMovesAsPerCurrentType(piece *Piece, board *Board, additionalBlockers []PieceCellOccupyBlocker, player *Player) []*Cell {
-	return nil
-}
+// // PossibleMovesAsPerCurrentType harus diimplementasikan oleh tipe move tertentu
+// func (p *PossibleMovesProvider) PossibleMovesAsPerCurrentType(piece *chess.Piece, board *chess.Board, additionalBlockers []PieceCellOccupyBlocker, player *chess.Player) []*chess.Box {
+// 	return nil
+// }
 
 // Helper method untuk mendapatkan semua langkah yang mungkin
-func (p *PossibleMovesProvider) FindAllNextMoves(piece *Piece, nextCellProvider NextCellProvider, board *Board, cellOccupyBlockers []PieceCellOccupyBlocker, player *Player) []*Cell {
-	result := []*Cell{}
+func (p *PossibleMovesProvider) FindAllNextMoves(piece *chess.Piece, nextCellProvider NextCellProvider, board *chess.Board, cellOccupyBlockers []PieceCellOccupyBlocker, player *chess.Player) []*chess.Box {
+	result := []*chess.Box{}
 	nextCell := nextCellProvider(piece.CurrentCell)
 	numSteps := 1
 
@@ -57,7 +57,7 @@ func (p *PossibleMovesProvider) FindAllNextMoves(piece *Piece, nextCellProvider 
 }
 
 // Mengecek apakah sebuah sel bisa ditempati oleh bidak
-func (p *PossibleMovesProvider) CheckIfCellCanBeOccupied(piece *Piece, cell *Cell, board *Board, additionalBlockers []PieceCellOccupyBlocker, player *Player) bool {
+func (p *PossibleMovesProvider) CheckIfCellCanBeOccupied(piece *chess.Piece, cell *chess.Box, board *chess.Board, additionalBlockers []PieceCellOccupyBlocker, player *chess.Player) bool {
 	if p.BaseBlocker != nil && p.BaseBlocker.IsCellNonOccupiableForPiece(cell, piece, board, player) {
 		return false
 	}
